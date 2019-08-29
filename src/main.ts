@@ -21,6 +21,10 @@ const apolloConfig: ApolloServerExpressConfig = {
     introspection,
     playground: enablePlayground,
     resolvers: rootSchema.resolvers,
+    subscriptions: {
+        keepAlive: 1000,
+        path: process.env.GRAPHQL_SUBSCRIPTION_PATH,
+    },
     typeDefs: rootSchema.typeDefs,
 };
 const apolloServer: ApolloServer = new ApolloServer(apolloConfig);
