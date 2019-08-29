@@ -1,0 +1,54 @@
+{
+  "program": {
+    "fileInfos": {
+      "/users/samuel.lusandi/documents/personal/projects/nodets/clevechatapollo/node_modules/typescript/lib/lib.d.ts": {
+        "version": "49ff9798f592c8b7e628fd881401e68810c1b3589ecd7a41b32b3c287374cde0",
+        "signature": "49ff9798f592c8b7e628fd881401e68810c1b3589ecd7a41b32b3c287374cde0"
+      },
+      "/users/samuel.lusandi/documents/personal/projects/nodets/clevechatapollo/node_modules/typescript/lib/lib.es5.d.ts": {
+        "version": "1f753cee573dea40df8a9dc873fef5566957b19ad513874f6643d8dfb14842d0",
+        "signature": "1f753cee573dea40df8a9dc873fef5566957b19ad513874f6643d8dfb14842d0"
+      },
+      "/users/samuel.lusandi/documents/personal/projects/nodets/clevechatapollo/node_modules/typescript/lib/lib.dom.d.ts": {
+        "version": "973df4e41aea3780ce77073777d37dd5896f684124f4c42409f3a832133837a4",
+        "signature": "973df4e41aea3780ce77073777d37dd5896f684124f4c42409f3a832133837a4"
+      },
+      "/users/samuel.lusandi/documents/personal/projects/nodets/clevechatapollo/node_modules/typescript/lib/lib.webworker.importscripts.d.ts": {
+        "version": "fe4e59403e34c7ff747abe4ff6abbc7718229556d7c1a5b93473fb53156c913b",
+        "signature": "fe4e59403e34c7ff747abe4ff6abbc7718229556d7c1a5b93473fb53156c913b"
+      },
+      "/users/samuel.lusandi/documents/personal/projects/nodets/clevechatapollo/node_modules/typescript/lib/lib.scripthost.d.ts": {
+        "version": "b9faa17292f17d2ad75e34fac77dd63a6403af1dba02d39cd0cbb9ffdf3de8b9",
+        "signature": "b9faa17292f17d2ad75e34fac77dd63a6403af1dba02d39cd0cbb9ffdf3de8b9"
+      },
+      "/users/samuel.lusandi/documents/personal/projects/nodets/clevechatapollo/src/main.ts": {
+        "version": "42b940953a0362fdee4c28c6ed8c66ddc693838f99d42efe35f19692261ec5f2",
+        "signature": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "options": {
+      "module": 1,
+      "declaration": true,
+      "removeComments": true,
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
+      "target": 1,
+      "sourceMap": true,
+      "outDir": "/Users/samuel.lusandi/Documents/Personal/Projects/NodeTS/CleveChatApollo/dist",
+      "rootDir": "/Users/samuel.lusandi/Documents/Personal/Projects/NodeTS/CleveChatApollo/src",
+      "incremental": true,
+      "configFilePath": "/Users/samuel.lusandi/Documents/Personal/Projects/NodeTS/CleveChatApollo/tsconfig.json"
+    },
+    "referencedMap": {},
+    "exportedModulesMap": {},
+    "semanticDiagnosticsPerFile": [
+      "/users/samuel.lusandi/documents/personal/projects/nodets/clevechatapollo/node_modules/typescript/lib/lib.d.ts",
+      "/users/samuel.lusandi/documents/personal/projects/nodets/clevechatapollo/node_modules/typescript/lib/lib.es5.d.ts",
+      "/users/samuel.lusandi/documents/personal/projects/nodets/clevechatapollo/node_modules/typescript/lib/lib.dom.d.ts",
+      "/users/samuel.lusandi/documents/personal/projects/nodets/clevechatapollo/node_modules/typescript/lib/lib.webworker.importscripts.d.ts",
+      "/users/samuel.lusandi/documents/personal/projects/nodets/clevechatapollo/node_modules/typescript/lib/lib.scripthost.d.ts",
+      "/users/samuel.lusandi/documents/personal/projects/nodets/clevechatapollo/src/main.ts"
+    ]
+  },
+  "version": "3.5.3"
+}
