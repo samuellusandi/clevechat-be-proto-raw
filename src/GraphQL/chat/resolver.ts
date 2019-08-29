@@ -1,5 +1,5 @@
 import { PubSub } from 'graphql-subscriptions';
-import { authenticate } from '../user/helpers';
+import { authenticate, isValidToken } from '../user/helpers';
 
 const chats: any[] = [];
 
@@ -11,6 +11,9 @@ export const resolvers = {
             context: any,
             info: any
         ) => {
+            if (!isValidToken(token)) {
+                throw new Error('No longer authorized to receive message.');
+            }
             if (chats[channel]) {
                 return limit ? chats[channel].slice(-limit) : chats[channel];
             }
@@ -46,8 +49,16 @@ export const resolvers = {
 
     Subscription: {
         messageSent: {
-            subscribe: (obj: any, { channel }: { channel: string }, { pubsub }: { pubsub: PubSub }) => {
-                return pubsub.asyncIterator(channel);
+            subscribe: (
+                obj: any,
+                { token, channel }: { token: string, channel: string },
+                { pubsub }: { pubsub: PubSub }
+            ) => {
+                if (isValidToken(token)) {
+                    return pubsub.asyncIterator(channel);
+                } else {
+                    throw new Error('No longer subscribed to chat.');
+                }
             }
         }
     }

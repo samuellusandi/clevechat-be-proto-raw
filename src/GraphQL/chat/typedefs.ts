@@ -17,6 +17,6 @@ export const typeDefs = gql`
     }
 
     extend type Subscription {
-        messageSent(channel: String!): Message
+        messageSent(token: String!, channel: String!): Message
     }
 `;
