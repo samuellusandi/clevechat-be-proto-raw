@@ -33,12 +33,6 @@ const logger: DefaultLogger = DefaultLogger.getDefaultLogger();
 
 apolloServer.applyMiddleware({ app: app.getApplication(), path });
 apolloServer.installSubscriptionHandlers(httpServer);
-// createRoutes(app);
-/*
-const appServer = app.start(() => {
-    logger.info(`Server started at http://localhost:${app.getPort()}.`);
-});
-*/
 httpServer.listen({ port }, () => {
    logger.info(`🚀 Server started at http://localhost:${app.getPort()}.`);
    logger.info(`🚀 Subscriptions ready at http://localhost:${app.getPort()}${apolloServer.subscriptionsPath}.`);
