@@ -1,6 +1,8 @@
 import { PubSub } from 'graphql-subscriptions';
 import { authenticate, isValidToken } from '../user/helpers';
 
+import { sanitizeInput } from 'src/core/helpers/sanitizer';
+
 const chats: any[] = [];
 
 export const resolvers = {
@@ -31,6 +33,11 @@ export const resolvers = {
             if (!user) {
                 throw new Error('You\'re not authorized to send this message.');
             }
+            message =  sanitizeInput(message);
+            if (!message || !message.length) {
+                throw new Error('Message cannot be empty.');
+            }
+
             if (!chats[channel]) {
                 chats[channel] = [];
             }
