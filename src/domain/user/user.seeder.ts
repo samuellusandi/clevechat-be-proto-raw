@@ -4,52 +4,62 @@ import cassandra from 'cassandra-driver';
 import { executeQuery } from 'src/core/database/query';
 import { databaseName } from 'src/globals';
 import { BaseSeeder } from '../base_seeder';
-import { UserRepository } from './user.repository';
 
 import { User } from './User';
+import { CreateUserService } from './user.create.service';
 
 export class UserSeeder extends BaseSeeder {
-    private repository: UserRepository;
-    private client: cassandra.Client;
+    public static readonly USERS_COUNT: number = 15;
 
-    constructor(repository: UserRepository, client: cassandra.Client) {
-        super();
-        this.client = client;
-        this.repository = repository;
+    private createService: CreateUserService;
+
+    constructor(createService: CreateUserService, client: cassandra.Client) {
+        super(`${databaseName}.${User.TABLE}`);
+        this.createService = createService;
     }
 
     public async createTable(): Promise<boolean> {
-        const table = `${databaseName}.${User.TABLE}`;
-        const query = `CREATE TABLE IF NOT EXISTS ${table} (
+        const query = `CREATE TABLE IF NOT EXISTS ${this.table} (
             id UUID PRIMARY KEY,
             name text,
-            password text
+            password text,
+            created_at timestamp,
+            updated_at timestamp
         )`;
-        return executeQuery(query, [], (er, result) => {
-            // tslint:disable-next-line:no-console
-            console.log([er, result]);
-        }).then(() => true).catch(() => false);
+        return executeQuery(query, [])
+            .then(() => true)
+            .catch((e) => {
+                throw new Error(e);
+            });
     }
 
     public async dropTable(): Promise<boolean> {
-        const table = `${databaseName}.${User.TABLE}`;
-        const query = `DROP TABLE IF EXISTS ${table}`;
-        return executeQuery(query, [], (er, result) => {
-            // tslint:disable-next-line:no-console
-            console.log([er, result]);
-        }).then(() => true).catch(() => false);
+        const query = `DROP TABLE IF EXISTS ${this.table}`;
+        return executeQuery(query, [])
+            .then(() => true)
+            .catch((e) => {
+                throw new Error(e);
+            });
     }
 
     public async truncateTable(): Promise<boolean> {
-        const table = `${databaseName}.${User.TABLE}`;
-        const query = `TRUNCATE ${table}`;
-        return executeQuery(query, [], (er, result) => {
-            // tslint:disable-next-line:no-console
-            console.log([er, result]);
-        }).then(() => true).catch(() => false);
+        const query = `TRUNCATE ${this.table}`;
+        return executeQuery(query, [])
+            .then(() => true)
+            .catch((e) => {
+                throw new Error(e);
+            });
     }
 
     public async seedTable(): Promise<void> {
-        await this.repository.createUser('1', '2');
+        const users = [];
+        for (let i = 0; i < UserSeeder.USERS_COUNT; ++i) {
+            users.push(this.createService.createUser(`User${i}`, 'abcdef'));
+        }
+
+        Promise.all(users)
+            .catch((e) => {
+                throw new Error(e);
+            });
     }
 }

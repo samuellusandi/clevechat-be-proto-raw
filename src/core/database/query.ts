@@ -1,14 +1,12 @@
-import { ResultCallback } from 'cassandra-driver';
 import { connection } from 'src/globals';
 
-export async function executeQuery(query: string, params: any[], callback: ResultCallback) {
+export async function executeQuery(query: string, params: any[]) {
     return new Promise((resolve, reject) => {
-        connection.execute(query, params, (err, result) => {
+        connection.execute(query, params, { prepare: true }, (err, result) => {
             if (err) {
-                reject();
+                reject(err);
             } else {
-                callback(err, result);
-                resolve();
+                resolve(result);
             }
         });
     });

@@ -3,7 +3,7 @@ import { BaseModel } from '../base_model';
 import bcrypt from 'bcrypt';
 
 export class User extends BaseModel {
-    public static readonly TABLE = 'table';
+    public static readonly TABLE = 'users';
 
     private id: string;
     private name: string;
@@ -14,7 +14,7 @@ export class User extends BaseModel {
         name: string,
         password: string
     ) {
-        super();
+        super(User.TABLE);
         this.id = id;
         this.name = name;
         this.password = password;
@@ -28,6 +28,6 @@ export class User extends BaseModel {
     }
 
     public attemptAuth(password: string): boolean {
-        return bcrypt.compareSync(this.password, password);
+        return bcrypt.compareSync(password, this.password);
     }
 }

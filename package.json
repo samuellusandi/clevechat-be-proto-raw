@@ -5,7 +5,6 @@
     "main": "index.js",
     "scripts": {
         "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
-        "buildSeed": "NODE_ENV=development SEED=true webpack --config webpack.development.js",
         "buildDev": "NODE_ENV=development webpack --config webpack.development.js",
         "buildProd": "NODE_ENV=production webpack --config webpack.production.js",
         "seed": "ts-node src/seed.ts",
