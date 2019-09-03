@@ -1,15 +1,11 @@
 export abstract class BaseSeeder {
+    /**
+     * The table name used for this model's seeding.
+     */
     protected table: string;
 
-    public constructor() {
-        if (process.env.NODE_ENV !== 'production') {
-            this.dropTable();
-            this.createTable();
-            this.seedTable();
-        } else {
-            this.dropTable();
-            this.createTable();
-        }
+    public constructor(table: string) {
+        this.table = table;
     }
 
     /**
@@ -23,6 +19,11 @@ export abstract class BaseSeeder {
      */
     public async abstract dropTable(): Promise<boolean>;
     /**
+     * Creates indices on the database as needed.
+     * If not implemented, just return immediately.
+     */
+    public async abstract createIndices(): Promise<boolean>;
+    /**
      * Empties the table. Should return whether
      * or not the cleaning is a success.
      */
@@ -30,5 +31,9 @@ export abstract class BaseSeeder {
     /**
      * Seeds the table with dummy data.
      */
-    public async abstract seedTable(): Promise<void>;
+    public async abstract seedTable(): Promise<boolean>;
+
+    public getTable(): string {
+        return this.table;
+    }
 }

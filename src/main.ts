@@ -4,10 +4,12 @@ import { createServer, Server } from 'http';
 
 import { App } from './core/App';
 import { resolveBoolean } from './core/helpers/converter';
-import { DefaultLogger } from './core/Logger';
+import { logger } from './globals';
 import { rootSchema } from './GraphQL/rootSchema';
+import { seed } from './seed';
 
 dotenv.config();
+seed();
 
 const port = process.env.APP_PORT ? +process.env.APP_PORT : undefined;
 const path = process.env.GRAPHQL_PATH ? `/${process.env.GRAPHQL_PATH}` : '/graphql';
@@ -29,7 +31,6 @@ const apolloConfig: ApolloServerExpressConfig = {
 };
 const apolloServer: ApolloServer = new ApolloServer(apolloConfig);
 const httpServer: Server = createServer(app.getApplication());
-const logger: DefaultLogger = DefaultLogger.getDefaultLogger();
 
 apolloServer.applyMiddleware({ app: app.getApplication(), path });
 apolloServer.installSubscriptionHandlers(httpServer);
