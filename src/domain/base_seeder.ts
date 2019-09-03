@@ -19,6 +19,11 @@ export abstract class BaseSeeder {
      */
     public async abstract dropTable(): Promise<boolean>;
     /**
+     * Creates indices on the database as needed.
+     * If not implemented, just return immediately.
+     */
+    public async abstract createIndices(): Promise<boolean>;
+    /**
      * Empties the table. Should return whether
      * or not the cleaning is a success.
      */
@@ -26,7 +31,7 @@ export abstract class BaseSeeder {
     /**
      * Seeds the table with dummy data.
      */
-    public async abstract seedTable(): Promise<void>;
+    public async abstract seedTable(): Promise<boolean>;
 
     public getTable(): string {
         return this.table;

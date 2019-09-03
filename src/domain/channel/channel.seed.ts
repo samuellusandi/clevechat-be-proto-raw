@@ -1,27 +1,24 @@
 import { executeQuery } from 'src/core/database/query';
 import { databaseName } from 'src/globals';
+
 import { BaseSeeder } from '../base_seeder';
+import { Channel } from './Channel';
+import { CreateChannelService } from './channel.create.service';
 
-import { User } from './User';
-import { CreateUserService } from './user.create.service';
+export class ChannelSeeder extends BaseSeeder {
+    private createService: CreateChannelService;
 
-export class UserSeeder extends BaseSeeder {
-    public static readonly USERS_COUNT: number = 15;
-
-    private createService: CreateUserService;
-
-    constructor(createService: CreateUserService) {
-        super(`${databaseName}.${User.TABLE}`);
+    public constructor(createService: CreateChannelService) {
+        super(`${databaseName}.${Channel.TABLE}`);
         this.createService = createService;
     }
 
     public async createTable(): Promise<boolean> {
         const query = `CREATE TABLE IF NOT EXISTS ${this.table} (
             id UUID PRIMARY KEY,
-            name text,
-            password text,
+            channel_name text,
             created_at timestamp,
-            updated_at timestamp
+            updated_at timestamp,
         )`;
         return executeQuery(query, [])
             .then(() => true)
@@ -31,7 +28,7 @@ export class UserSeeder extends BaseSeeder {
     }
 
     public async createIndices(): Promise<boolean> {
-        const query = `CREATE INDEX IF NOT EXISTS username ON ${this.table} (name)`;
+        const query = `CREATE INDEX IF NOT EXISTS channel_name ON ${this.table} (channel_name)`;
         return executeQuery(query, [])
             .then(() => true)
             .catch((e) => {
@@ -58,12 +55,16 @@ export class UserSeeder extends BaseSeeder {
     }
 
     public async seedTable(): Promise<boolean> {
-        const users = [];
-        for (let i = 0; i < UserSeeder.USERS_COUNT; ++i) {
-            users.push(this.createService.createUser(`User${i}`, 'abcdef'));
+        const channelNames = [
+            'General',
+            'Games',
+            'Entertainment',
+        ];
+        const promises = [];
+        for (const channelName of channelNames) {
+            promises.push(this.createService.createChannel(channelName));
         }
-
-        return Promise.all(users)
+        return Promise.all(promises)
             .then(() => true)
             .catch((e) => {
                 throw new Error(e);
