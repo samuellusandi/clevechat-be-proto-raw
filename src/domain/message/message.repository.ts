@@ -14,9 +14,11 @@ export class MessageRepository extends BaseRepository {
         from: string,
         to: string
     ): Promise<void> {
-        const query = `INSERT INTO ${this.getCompleteTableName()}
-            (id, message, channel_id, from_id, created_at, updated_at)
-            VALUES (now(), ?, ?, ?, toTimeStamp(now()), toTimestamp(now()))`;
+        const query = `
+            INSERT INTO ${this.getCompleteTableName()}
+                (id, message, channel_id, from_id, created_at, updated_at)
+            VALUES (now(), ?, ?, ?, toTimeStamp(now()), toTimestamp(now()))
+        `;
         await executeQuery(query,
                 [
                     message,
