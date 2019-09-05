@@ -10,6 +10,14 @@ export class CreateUserService {
     }
 
     public async createUser(displayName: string, password: string): Promise<void> {
-        await this.userRepo.createUser(displayName, bcrypt.hashSync(password, 10));
+        return await this.userRepo.createUser(displayName, bcrypt.hashSync(password, 10));
+    }
+
+    public async safeCreateUser(displayName: string, password: string): Promise<void> {
+        const exists = await this.userRepo.userExistsByName(displayName);
+        if (exists) {
+            return Promise.reject(new Error('Username unavailable'));
+        }
+        return await this.userRepo.createUser(displayName, bcrypt.hashSync(password, 10));
     }
 }

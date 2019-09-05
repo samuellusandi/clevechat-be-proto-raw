@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import sanitizeHtml from 'sanitize-html';
 import { strictSanitizationRule } from './sanitize_rules/strict';
 

@@ -15,10 +15,11 @@ export class ChannelSeeder extends BaseSeeder {
 
     public async createTable(): Promise<boolean> {
         const query = `CREATE TABLE IF NOT EXISTS ${this.table} (
-            id UUID PRIMARY KEY,
+            id UUID,
             channel_name text,
             created_at timestamp,
             updated_at timestamp,
+            PRIMARY KEY (id, channel_name),
         )`;
         return executeQuery(query, [])
             .then(() => true)
@@ -28,7 +29,7 @@ export class ChannelSeeder extends BaseSeeder {
     }
 
     public async createIndices(): Promise<boolean> {
-        const query = `CREATE INDEX IF NOT EXISTS channel_name ON ${this.table} (channel_name)`;
+        const query = `CREATE INDEX IF NOT EXISTS channelChannelName ON ${this.table} (channel_name)`;
         return executeQuery(query, [])
             .then(() => true)
             .catch((e) => {

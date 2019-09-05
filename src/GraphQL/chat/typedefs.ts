@@ -2,14 +2,19 @@ import { gql } from 'apollo-server-core';
 
 export const typeDefs = gql`
     type Message {
-        id: Int!
-        from: User,
+        id: String!
+        from: User
         message: String!
         channel: String!
     }
 
+    type MessagesWithMeta {
+        messages: [Message]!
+        pageState: String!
+    }
+
     extend type Query {
-        messages(token: String!, channel: String!, limit: Int): [Message]
+        messages(token: String!, channel: String!, limit: Int, pageState: String): MessagesWithMeta
     }
 
     extend type Mutation {

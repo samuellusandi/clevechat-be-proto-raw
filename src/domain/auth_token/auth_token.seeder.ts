@@ -1,25 +1,20 @@
 import { executeQuery } from 'src/core/database/query';
 import { databaseName } from 'src/globals';
+
 import { BaseSeeder } from '../base_seeder';
+import { AuthToken } from './AuthToken';
 
-import { User } from './User';
-import { CreateUserService } from './user.create.service';
-
-export class UserSeeder extends BaseSeeder {
-    public static readonly USERS_COUNT: number = 15;
-
-    private createService: CreateUserService;
-
-    constructor(createService: CreateUserService) {
-        super(`${databaseName}.${User.TABLE}`);
-        this.createService = createService;
+export class AuthTokenSeeder extends BaseSeeder {
+    public constructor() {
+        super(`${databaseName}.${AuthToken.TABLE}`);
     }
 
     public async createTable(): Promise<boolean> {
         const query = `CREATE TABLE IF NOT EXISTS ${this.table} (
             id UUID PRIMARY KEY,
-            name text,
-            password text,
+            user_id text,
+            auth_token text,
+            valid_until timestamp,
             created_at timestamp,
             updated_at timestamp,
         )`;
@@ -31,8 +26,12 @@ export class UserSeeder extends BaseSeeder {
     }
 
     public async createIndices(): Promise<boolean> {
-        const query = `CREATE INDEX IF NOT EXISTS userUsername ON ${this.table} (name)`;
-        return executeQuery(query, [])
+        const userIdQuery = `CREATE INDEX IF NOT EXISTS authTokenUserId ON ${this.table} (user_id)`;
+        const authTokenQuery = `CREATE INDEX IF NOT EXISTS authTokenAuthToken ON ${this.table} (auth_token)`;
+        const promises = [];
+        promises.push(executeQuery(userIdQuery, []));
+        promises.push(executeQuery(authTokenQuery, []));
+        return Promise.all(promises)
             .then(() => true)
             .catch((e) => {
                 throw new Error(e);
@@ -57,16 +56,7 @@ export class UserSeeder extends BaseSeeder {
             });
     }
 
-    public async seedTable(): Promise<boolean> {
-        const users = [];
-        for (let i = 0; i < UserSeeder.USERS_COUNT; ++i) {
-            users.push(this.createService.createUser(`User${i}`, 'abcdef'));
-        }
-
-        return Promise.all(users)
-            .then(() => true)
-            .catch((e) => {
-                throw new Error(e);
-            });
+    public seedTable(): Promise<boolean> {
+        return Promise.resolve(true);
     }
 }

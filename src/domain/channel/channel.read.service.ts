@@ -8,7 +8,13 @@ export class ReadChannelService {
         this.channelRepo = channelRepo;
     }
 
+    public async getChannelById(id: string): Promise<Channel | null> {
+        return await this.channelRepo.getChannelById(id)
+            .catch((err: Error) => Promise.reject(err));
+    }
+
     public async getChannelByName(channelName: string): Promise<Channel | null> {
-        return this.channelRepo.getChannelByName(channelName);
+        return await this.channelRepo.getChannelByName(channelName)
+            .catch((err: Error) => Promise.reject(err));
     }
 }
