@@ -1,6 +1,7 @@
 import { PubSub } from 'graphql-subscriptions';
 
 import { ObjectWithMeta } from 'src/core/helpers/object_with_meta';
+import { allowFormattingRules } from 'src/core/helpers/sanitize_rules/allow_formatting';
 import { sanitizeInput } from 'src/core/helpers/sanitizer';
 import { AuthToken } from 'src/domain/auth_token/AuthToken';
 import { Channel } from 'src/domain/channel/Channel';
@@ -71,8 +72,8 @@ export const resolvers = {
             { from, token, message, channel }: { from: string, token: string, message: string, channel: string },
             { pubsub }: { pubsub: PubSub },
         ) => {
-            const sanitizedMessage = sanitizeInput(message);
-            if (sanitizedMessage.length <= 0) {
+            const sanitizedMessage = sanitizeInput(message, allowFormattingRules);
+            if (!(sanitizedMessage && sanitizedMessage.length)) {
                 throw new Error('Message cannot be empty!');
             }
             const authToken: AuthToken | null = await RootController.authToken.verify.getUserIdFromAuthToken(token);
@@ -108,7 +109,7 @@ export const resolvers = {
                     id: user.getId(),
                 },
                 id: messageObject.getId(),
-                sanitizedMessage,
+                message: sanitizedMessage,
             };
 
             pubsub.publish(channel, { messageSent: gqlMessage });

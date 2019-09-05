@@ -1,7 +1,5 @@
-import crypto from 'crypto';
 import sanitizeHtml from 'sanitize-html';
-import { strictSanitizationRule } from './sanitize_rules/strict';
 
-export function sanitizeInput(input: string): string {
-    return sanitizeHtml(input, strictSanitizationRule);
+export function sanitizeInput(input: string, rule: sanitizeHtml.IOptions): string {
+    return sanitizeHtml(input, rule);
 }
