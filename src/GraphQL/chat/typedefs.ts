@@ -10,7 +10,7 @@ export const typeDefs = gql`
 
     type MessagesWithMeta {
         messages: [Message]!
-        pageState: String!
+        pageState: String
     }
 
     extend type Query {
