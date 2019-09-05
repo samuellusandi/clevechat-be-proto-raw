@@ -108,7 +108,7 @@ export const resolvers = {
                     id: user.getId(),
                 },
                 id: messageObject.getId(),
-                message,
+                sanitizedMessage,
             };
 
             pubsub.publish(channel, { messageSent: gqlMessage });
