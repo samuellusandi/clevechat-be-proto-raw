@@ -71,6 +71,10 @@ export const resolvers = {
             { from, token, message, channel }: { from: string, token: string, message: string, channel: string },
             { pubsub }: { pubsub: PubSub },
         ) => {
+            const sanitizedMessage = sanitizeInput(message);
+            if (sanitizedMessage.length <= 0) {
+                throw new Error('Message cannot be empty!');
+            }
             const authToken: AuthToken | null = await RootController.authToken.verify.getUserIdFromAuthToken(token);
             if (!(authToken && authToken.checkTokenValidity())) {
                 throw new Error('Authorization failed to send messages.');
@@ -84,7 +88,7 @@ export const resolvers = {
             const sender = await RootService.user.read.getUserByName(from);
             const chan = await RootService.channel.read.getChannelByName(channel);
             const messageObject = await RootService.message.create.createMessage(
-                sanitizeInput(message),
+                sanitizedMessage,
                 sender.getId(),
                 chan.getId(),
             );
