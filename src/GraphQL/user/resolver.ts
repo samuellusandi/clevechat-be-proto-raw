@@ -1,13 +1,5 @@
-import { generateToken, uniqIdGenerator } from './helpers';
-
-export interface User {
-    id: string;
-    displayName: string;
-    password: string;
-    authToken?: string;
-}
-
-export const users: User[] = [];
+import { User } from 'src/domain/user/User';
+import { RootController } from 'src/graphql_controllers/controller';
 
 export const resolvers = {
     Query: {
@@ -16,73 +8,50 @@ export const resolvers = {
             { id }: { id: string },
             context: any,
         ) => {
-            users.forEach((user: User) => {
-                if (user.id === id) {
-                    return user;
-                }
-            });
             return null;
         },
 
-        getUserByDisplayName: (
+        getUserByDisplayName: async (
             obj: any,
             { displayName }: { displayName: string },
             context: any,
         ) => {
-            users.forEach((user: User) => {
-                if (user.displayName === displayName) {
-                    return user;
-                }
-            });
-            return null;
+            return await RootController.user.read.handle(displayName)
+                .then((user: User) => {
+                    return {
+                        displayName: user.getName(),
+                        id: user.getId(),
+                    };
+                })
+                .catch((err: Error) => {
+                    throw err;
+                });
         },
 
-        getUsers: (obj: any, args: any, context: any) => {
-            return users;
-        },
-
-        login: (
+        login: async (
             obj: any,
             { displayName, password }: { displayName: string, password: string },
             context: any
         ) => {
-            let authenticated: User | null = null;
-            users.forEach((user: User) => {
-                if (user.displayName === displayName &&
-                    user.password !== password) {
-                    throw new Error('Invalid login credentials.');
-                } else if (
-                    user.displayName === displayName &&
-                    user.password === password) {
-                    authenticated = user;
-                }
-            });
-            if (authenticated !== null) {
-                authenticated.authToken = generateToken();
-                return authenticated.authToken;
-            }
-            throw new Error('Could not authenticate: User or password might be wrong.');
+            return await RootController.user.login.handle(displayName, password)
+                .then((value: string) => value)
+                .catch((err: Error) => {
+                    throw err;
+                });
         },
     },
 
     Mutation: {
-        register: (
+        register: async (
             obj: any,
             { displayName, password }: { displayName: string, password: string },
             context: any
         ) => {
-            users.forEach((user: User) => {
-                if (user.displayName === displayName) {
-                    throw new Error('User already registered');
-                }
-            });
-            const createdUser = {
-                displayName,
-                id: uniqIdGenerator(),
-                password,
-            };
-            users.push(createdUser);
-            return createdUser;
+            return await RootController.user.register.handle(displayName, password)
+                .then(() => true)
+                .catch((err: Error) => {
+                    throw err;
+                });
         },
     },
 };

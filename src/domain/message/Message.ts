@@ -20,6 +20,10 @@ export class Message extends BaseModel {
         this.messageAttribute = messageAttribute;
     }
 
+    public getId(): string | undefined {
+        return this.messageAttribute.id;
+    }
+
     public getMessage(): string | undefined {
         return this.messageAttribute.message;
     }

@@ -1,3 +1,4 @@
+import { Message } from './Message';
 import { MessageRepository } from './message.repository';
 
 export class CreateMessageService {
@@ -11,7 +12,7 @@ export class CreateMessageService {
         message: string,
         from: string,
         to: string,
-    ): Promise<void> {
-        await this.messageRepo.createMessage(message, from, to);
+    ): Promise<Message> {
+        return await this.messageRepo.createMessage(message, from, to);
     }
 }

@@ -20,6 +20,30 @@ export class ChannelRepository extends BaseRepository {
             .catch((err) => { throw new Error(err); });
     }
 
+    public async getChannelById(id: string): Promise<Channel | null> {
+        const query = `
+            SELECT id, channel_name, created_at, updated_at
+            FROM ${this.getCompleteTableName()}
+            WHERE id=?
+        `;
+        return executeQuery(query, [id])
+            .then((result: cassandra.types.ResultSet) => {
+                return result.rowLength > 0
+                    ? new Channel({
+                        channelName: result.rows[0].channel_name,
+                        id: convertUuidToString(result.rows[0].id),
+                        timestamps: {
+                            createdAt: result.rows[0].created_at,
+                            updatedAt: result.rows[0].updated_at,
+                        },
+                    })
+                    : null;
+            })
+            .catch((err: Error) => {
+                throw err;
+            });
+    }
+
     public async getChannelByName(channelName: string): Promise<Channel | null> {
         const query = `
             SELECT id, channel_name, created_at, updated_at

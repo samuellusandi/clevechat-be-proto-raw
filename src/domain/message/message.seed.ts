@@ -27,13 +27,14 @@ export class MessageSeeder extends BaseSeeder {
 
     public async createTable(): Promise<boolean> {
         const query = `CREATE TABLE IF NOT EXISTS ${this.table} (
-            id TIMEUUID PRIMARY KEY,
+            id TIMEUUID,
             message text,
             channel_id UUID,
             from_id UUID,
             created_at timestamp,
             updated_at timestamp,
-        )`;
+            PRIMARY KEY (channel_id, created_at)
+        ) WITH CLUSTERING ORDER BY (created_at ASC)`;
         return executeQuery(query, [])
             .then(() => true)
             .catch((e) => {
@@ -42,11 +43,13 @@ export class MessageSeeder extends BaseSeeder {
     }
 
     public async createIndices(): Promise<boolean> {
-        const chanIdQuery = `CREATE INDEX IF NOT EXISTS username ON ${this.table} (channel_id)`;
-        const fromIdQuery = `CREATE INDEX IF NOT EXISTS username ON ${this.table} (from_id)`;
+        const idQuery = `CREATE INDEX IF NOT EXISTS messageId ON ${this.table} (id)`;
+        const fromIdQuery = `CREATE INDEX IF NOT EXISTS messageFromId ON ${this.table} (from_id)`;
+        const createdAtQuery = `CREATE INDEX IF NOT EXISTS messageCreatedAt ON ${this.table} (created_at)`;
         const promises = [];
-        promises.push(executeQuery(chanIdQuery, []));
-        promises.push(await executeQuery(fromIdQuery, []));
+        promises.push(executeQuery(idQuery, []));
+        promises.push(executeQuery(fromIdQuery, []));
+        promises.push(executeQuery(createdAtQuery, []));
         return Promise.all(promises)
             .then(() => true)
             .catch((e) => {
@@ -75,26 +78,21 @@ export class MessageSeeder extends BaseSeeder {
     public async seedTable(): Promise<boolean> {
         const user: User = await this.readUserService.getUserByName('User1');
         const channel: Channel = await this.readChannelService.getChannelByName('General');
-        const promises = [];
-        promises.push(this.createService.createMessage(
+        await this.createService.createMessage(
             'First message!',
             user.getId(),
             channel.getId()
-        ));
-        promises.push(this.createService.createMessage(
+        );
+        await this.createService.createMessage(
             'Second message!',
             user.getId(),
             channel.getId()
-        ));
-        promises.push(this.createService.createMessage(
+        );
+        await this.createService.createMessage(
             'Third message!',
             user.getId(),
             channel.getId()
-        ));
-        return Promise.all(promises)
-            .then(() => true)
-            .catch((err: Error) => {
-                throw err;
-            });
+        );
+        return true;
     }
 }
