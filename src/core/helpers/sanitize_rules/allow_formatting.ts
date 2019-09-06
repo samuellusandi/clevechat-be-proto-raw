@@ -10,5 +10,6 @@ export const allowFormattingRules: sanitize.IOptions = {
         'u',
         'sup',
         'sub',
+        's',
     ],
 };
